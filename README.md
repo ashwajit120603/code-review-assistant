@@ -3,6 +3,14 @@
 🔗 **Live Demo:** https://drive.google.com/file/d/181d6w68dtJ0_dUVUnXzI04PbCsBGvrMs/view?usp=sharing
 
 
+https://github.com/user-attachments/assets/1961faa7-c867-4831-b925-99a0356b6ed2
+
+
+
+
+
+
+
 An AI-powered full-stack application that automatically analyzes source code, detects issues, and generates a structured review report using LLMs (groq or compatible models).  
 Users can upload code files through a React interface, and the Node/Express backend processes them, calls the LLM, and optionally stores reports in MongoDB.
 
