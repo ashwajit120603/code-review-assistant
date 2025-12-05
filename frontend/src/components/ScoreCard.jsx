@@ -1,23 +1,4 @@
-// import React from "react";
 
-// function ScoreCard({ label, value }) {
-//   const normalized = Math.max(0, Math.min(10, value || 0));
-
-//   return (
-//     <div className="border rounded-lg p-3 bg-slate-50">
-//       <p className="text-xs text-slate-500">{label}</p>
-//       <p className="text-xl font-semibold">{normalized}/10</p>
-//       <div className="mt-1 h-2 bg-slate-200 rounded-full overflow-hidden">
-//         <div
-//           className="h-full bg-slate-900"
-//           style={{ width: `${(normalized / 10) * 100}%` }}
-//         />
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default ScoreCard;
 
 
 

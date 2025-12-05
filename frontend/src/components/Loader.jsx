@@ -1,15 +1,4 @@
-// import React from "react";
 
-// function Loader() {
-//   return (
-//     <div className="flex items-center gap-2 text-sm text-slate-600 mt-2">
-//       <span className="inline-flex h-3 w-3 rounded-full border border-slate-400 border-t-transparent animate-spin" />
-//       <span>Analyzing code…</span>
-//     </div>
-//   );
-// }
-
-// export default Loader;
 
 
 
