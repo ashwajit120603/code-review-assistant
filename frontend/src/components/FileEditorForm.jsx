@@ -4,9 +4,9 @@
 
 
 // FileEditorForm.jsx
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { motion } from "framer-motion";
-import { ClipboardIcon, CheckIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { ClipboardIcon, CheckIcon, TrashIcon, ArrowUpTrayIcon } from "@heroicons/react/24/outline";
 
 /**
  * Props:
@@ -26,8 +26,31 @@ const LANG_OPTIONS = [
   "rust",
 ];
 
+// Map file extensions to languages
+const EXT_TO_LANG = {
+  ".js": "javascript",
+  ".jsx": "javascript",
+  ".ts": "typescript",
+  ".tsx": "typescript",
+  ".py": "python",
+  ".java": "java",
+  ".cs": "csharp",
+  ".cpp": "cpp",
+  ".cc": "cpp",
+  ".cxx": "cpp",
+  ".c": "cpp",
+  ".go": "go",
+  ".rs": "rust",
+};
+
+function getLanguageFromFilename(filename) {
+  const ext = filename.substring(filename.lastIndexOf(".")).toLowerCase();
+  return EXT_TO_LANG[ext] || "javascript";
+}
+
 function FileEditorForm({ file, index, onChange, onRemove }) {
   const [copied, setCopied] = useState(false);
+  const fileInputRef = useRef(null);
 
   const handleCopy = async () => {
     try {
@@ -37,6 +60,38 @@ function FileEditorForm({ file, index, onChange, onRemove }) {
     } catch {
       // ignore
     }
+  };
+
+  const handleFileUpload = (event) => {
+    const uploadedFile = event.target.files?.[0];
+    if (!uploadedFile) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const content = e.target.result;
+      const filename = uploadedFile.name;
+      const detectedLanguage = getLanguageFromFilename(filename);
+
+      // Update filename, language, and content
+      onChange(file.id, "filename", filename);
+      onChange(file.id, "language", detectedLanguage);
+      onChange(file.id, "content", content);
+    };
+
+    reader.onerror = () => {
+      alert("Error reading file. Please try again.");
+    };
+
+    reader.readAsText(uploadedFile);
+
+    // Reset the input so the same file can be selected again
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
+  const triggerFileInput = () => {
+    fileInputRef.current?.click();
   };
 
   return (
@@ -80,12 +135,33 @@ function FileEditorForm({ file, index, onChange, onRemove }) {
             </button>
           </div>
 
+          <div className="mt-3 flex gap-2 mb-2">
+            <button
+              type="button"
+              onClick={triggerFileInput}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg border border-indigo-300 bg-indigo-50 text-indigo-700 text-sm font-medium hover:bg-indigo-100 transition-colors"
+            >
+              <ArrowUpTrayIcon className="w-4 h-4" />
+              Upload File
+            </button>
+            <span className="text-xs text-slate-500 self-center">or</span>
+            <span className="text-xs text-slate-500 self-center">paste code below</span>
+          </div>
+
+          <input
+            ref={fileInputRef}
+            type="file"
+            onChange={handleFileUpload}
+            className="hidden"
+            accept=".js,.jsx,.ts,.tsx,.py,.java,.cs,.cpp,.cc,.cxx,.c,.go,.rs"
+          />
+
           <textarea
             value={file.content}
             onChange={(e) => onChange(file.id, "content", e.target.value)}
             rows={10}
-            className="mt-3 w-full border rounded-lg px-3 py-2 text-sm font-mono resize-y focus:outline-none focus:ring-2 focus:ring-indigo-100"
-            placeholder={`// Paste your code here...`}
+            className="w-full border rounded-lg px-3 py-2 text-sm font-mono resize-y focus:outline-none focus:ring-2 focus:ring-indigo-100"
+            placeholder={`// Paste your code here or upload a file above...`}
           />
         </div>
 
